@@ -10,6 +10,7 @@ import { VisitorModule } from './team A/employee_sends_visitor_data/visitor.modu
 import { AppointmentModule } from './team B/appointment/appointment.module';
 import { MailService } from './team B/mail/mail.service';
 import { MailModule } from './login+register/mail/mail.module';
+import { UsersModule } from './team B/users/users.module';
 
 
 @Module({
@@ -20,7 +21,7 @@ import { MailModule } from './login+register/mail/mail.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'root',
+      password: 'endel@123',
       database: 'CURD',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ensure entities are loaded
       autoLoadEntities: true,
@@ -31,6 +32,7 @@ import { MailModule } from './login+register/mail/mail.module';
     MailModule,
     VisitorModule,
     AppointmentModule,
+    UsersModule,
   ],
   
   controllers: [AppController],
