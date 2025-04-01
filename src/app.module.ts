@@ -32,6 +32,7 @@ import { UsersModule } from './team B/users/users.module';
     MailModule,
     VisitorModule,
     AppointmentModule,
+    UsersModule
   ],
   
   controllers: [AppController],
