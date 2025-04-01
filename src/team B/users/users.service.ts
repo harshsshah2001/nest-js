@@ -21,7 +21,8 @@ export class UsersService {
       throw new ConflictException('Username already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Ensure password is defined since it's required for create
+    const hashedPassword = await bcrypt.hash(password!, 10); // Using ! since password is required in create
     const user = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
@@ -58,12 +59,48 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async toggleStatus(id: number, updateUserStatusDto: UpdateUserStatusDto): Promise<User> {
+  async findOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    return user;
+  }
+
+  async toggleStatus(id: number, updateUserStatusDto: UpdateUserStatusDto): Promise<User> {
+    const user = await this.findOne(id);
     user.isActive = updateUserStatusDto.isActive;
+    return this.usersRepository.save(user);
+  }
+
+  async update(id: number, updateUserDto: CreateUserDto): Promise<User> {
+    const user = await this.findOne(id);
+    
+    if (updateUserDto.userName && updateUserDto.userName !== user.userName) {
+      const existingUser = await this.usersRepository.findOne({ 
+        where: { userName: updateUserDto.userName } 
+      });
+      if (existingUser && existingUser.id !== id) {
+        throw new ConflictException('Username already exists');
+      }
+    }
+
+    if (updateUserDto.password) {
+      user.password = await bcrypt.hash(updateUserDto.password, 10);
+    }
+
+    // Update only the provided fields
+    Object.assign(user, {
+      firstName: updateUserDto.firstName,
+      lastName: updateUserDto.lastName,
+      userName: updateUserDto.userName,
+      contactNo: updateUserDto.contactNo,
+      emailId: updateUserDto.emailId,
+      address: updateUserDto.address,
+      userRoleId: updateUserDto.userRoleId,
+      notes: updateUserDto.notes,
+    });
+
     return this.usersRepository.save(user);
   }
 
