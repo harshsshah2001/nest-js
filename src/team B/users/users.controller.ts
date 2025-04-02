@@ -2,10 +2,11 @@ import { Controller, Post, Body, Get, Patch, Delete, Query, Param, HttpCode, Htt
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {} // Use renamed import
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -55,5 +56,12 @@ async update(@Param('id') id: string, @Body() updateUserDto: CreateUserDto) {
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id') id: string) {
     await this.usersService.delete(parseInt(id));
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() loginDto: LoginUserDto) {
+    const user = await this.usersService.validateUser(loginDto.userName, loginDto.password);
+    return { message: 'Login successful', user: { id: user.id, userName: user.userName } };
   }
 }

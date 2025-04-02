@@ -1,7 +1,7 @@
 // users.service.ts
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository, Like } from 'typeorm'; // Added Like import
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
@@ -31,7 +31,7 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async findAll(page: number, limit: number, search: string) {
+  async findAll(page: number, limit: number, search: string): Promise<any> {
     const skip = (page - 1) * limit;
     const where = search
       ? [
@@ -109,5 +109,27 @@ export class UsersService {
     if (result.affected === 0) {
       throw new NotFoundException('User not found');
     }
+  }
+
+  async validateUser(userName: string, password: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ 
+      where: { userName },
+      select: ['id', 'userName', 'password', 'isActive']
+    });
+    
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.isActive) {
+      throw new ConflictException('User account is not active');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new ConflictException('Invalid password');
+    }
+
+    return user;
   }
 }
