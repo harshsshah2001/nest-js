@@ -3,10 +3,13 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {} // Use renamed import
+  constructor(private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {} // Use renamed import
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -62,6 +65,12 @@ async update(@Param('id') id: string, @Body() updateUserDto: CreateUserDto) {
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginUserDto) {
     const user = await this.usersService.validateUser(loginDto.userName, loginDto.password);
-    return { message: 'Login successful', user: { id: user.id, userName: user.userName } };
-  }
+    const payload = { sub: user.id, username: user.userName };
+    const token = this.jwtService.sign(payload);
+    return {
+      message: 'Login successful',
+      user: { id: user.id, userName: user.userName },
+      token,
+    };
+}
 }
