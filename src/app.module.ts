@@ -35,6 +35,7 @@ import { UserRolesModule } from './user-roles/user-roles.module';
     VisitorModule,
     AppointmentModule,
     UsersModule,
+    UserRolesModule
   ],
   
   controllers: [AppController],

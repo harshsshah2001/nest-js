@@ -1,3 +1,4 @@
+// src/user-roles/user-roles.service.ts
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -17,11 +18,9 @@ export class UserRolesService {
     @InjectRepository(UserRolePermission)
     private userRolePermissionRepository: Repository<UserRolePermission>,
   ) {
-    // Seed permissions on service initialization
     this.seedPermissions().catch(error => console.error('Seeding failed:', error));
   }
 
-  // Seed initial permissions
   private async seedPermissions() {
     try {
       const count = await this.permissionRepository.count();
@@ -36,7 +35,6 @@ export class UserRolesService {
             isDeleteDisplay: true,
             isExecuteDisplay: true,
           },
-          
         ];
         await this.permissionRepository.save(initialPermissions);
         console.log('Permissions seeded successfully');
@@ -48,7 +46,6 @@ export class UserRolesService {
 
   async create(createUserRoleDto: CreateUserRoleDto) {
     try {
-      // Validate permission IDs
       const permissionIds = createUserRoleDto.permissions.map(p => p.id);
       const existingPermissions = await this.permissionRepository.findByIds(permissionIds);
       if (existingPermissions.length !== permissionIds.length) {
@@ -59,9 +56,9 @@ export class UserRolesService {
         userRoleName: createUserRoleDto.UserRoleName,
         active: true,
       });
-      
+
       const savedUserRole = await this.userRoleRepository.save(userRole);
-      
+
       const permissions = createUserRoleDto.permissions.map(perm => ({
         userRoleId: savedUserRole.id,
         permissionId: perm.id,
@@ -71,7 +68,7 @@ export class UserRolesService {
         isDelete: perm.IsDelete || false,
         isExecute: perm.IsExecute || false,
       }));
-      
+
       await this.userRolePermissionRepository.save(permissions);
       return await this.findOne(savedUserRole.id);
     } catch (error) {
@@ -106,10 +103,8 @@ export class UserRolesService {
 
   async update(id: number, updateUserRoleDto: UpdateUserRoleDto) {
     try {
-      // Check if user role exists
       const existingRole = await this.findOne(id);
-      
-      // Validate permission IDs
+
       const permissionIds = updateUserRoleDto.permissions.map(p => p.id);
       const existingPermissions = await this.permissionRepository.findByIds(permissionIds);
       if (existingPermissions.length !== permissionIds.length) {
@@ -131,7 +126,7 @@ export class UserRolesService {
         isDelete: perm.IsDelete || false,
         isExecute: perm.IsExecute || false,
       }));
-      
+
       await this.userRolePermissionRepository.save(permissions);
       return await this.findOne(id);
     } catch (error) {

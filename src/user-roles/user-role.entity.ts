@@ -1,3 +1,4 @@
+// src/user-roles/entities/user-role.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { UserRolePermission } from './entities/user-role-permission.entity';
 
@@ -12,6 +13,6 @@ export class UserRole {
   @Column({ default: true })
   active: boolean;
 
-  @OneToMany(() => UserRolePermission, permission => permission.userRole)
+  @OneToMany(() => UserRolePermission, userRolePermission => userRolePermission.userRole)
   permissions: UserRolePermission[];
 }

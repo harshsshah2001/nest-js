@@ -1,3 +1,4 @@
+// src/user-roles/entities/user-role-permission.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { UserRole } from '../user-role.entity';
 import { Permission } from './permission.entity';
