@@ -46,35 +46,35 @@ export class UserRolesService {
 
   async create(createUserRoleDto: CreateUserRoleDto) {
     try {
-      const permissionIds = createUserRoleDto.permissions.map(p => p.id);
-      const existingPermissions = await this.permissionRepository.findByIds(permissionIds);
-      if (existingPermissions.length !== permissionIds.length) {
-        throw new BadRequestException('One or more permission IDs are invalid');
-      }
+        const permissionIds = createUserRoleDto.permissions.map(p => p.id);
+        const existingPermissions = await this.permissionRepository.findByIds(permissionIds);
+        if (existingPermissions.length !== permissionIds.length) {
+            throw new BadRequestException('One or more permission IDs are invalid');
+        }
 
-      const userRole = this.userRoleRepository.create({
-        userRoleName: createUserRoleDto.UserRoleName,
-        active: true,
-      });
+        const userRole = this.userRoleRepository.create({
+            userRoleName: createUserRoleDto.UserRoleName,
+            active: true, // Active is set to true by default in the backend
+        });
 
-      const savedUserRole = await this.userRoleRepository.save(userRole);
+        const savedUserRole = await this.userRoleRepository.save(userRole);
 
-      const permissions = createUserRoleDto.permissions.map(perm => ({
-        userRoleId: savedUserRole.id,
-        permissionId: perm.id,
-        isRead: perm.IsRead || false,
-        isCreate: perm.IsCreate || false,
-        isUpdate: perm.IsUpdate || false,
-        isDelete: perm.IsDelete || false,
-        isExecute: perm.IsExecute || false,
-      }));
+        const permissions = createUserRoleDto.permissions.map(perm => ({
+            userRoleId: savedUserRole.id,
+            permissionId: perm.id,
+            isRead: perm.IsRead || false,
+            isCreate: perm.IsCreate || false,
+            isUpdate: perm.IsUpdate || false,
+            isDelete: perm.IsDelete || false,
+            isExecute: perm.IsExecute || false,
+        }));
 
-      await this.userRolePermissionRepository.save(permissions);
-      return await this.findOne(savedUserRole.id);
+        await this.userRolePermissionRepository.save(permissions);
+        return await this.findOne(savedUserRole.id);
     } catch (error) {
-      throw new BadRequestException(`Failed to create user role: ${error.message}`);
+        throw new BadRequestException(`Failed to create user role: ${error.message}`);
     }
-  }
+}
 
   async findAll() {
     try {
