@@ -11,6 +11,8 @@ import { AppointmentModule } from './team B/appointment/appointment.module';
 import { MailService } from './team B/mail/mail.service';
 import { MailModule } from './login+register/mail/mail.module';
 import { UsersModule } from './team B/users/users.module';
+import { UserRole } from './user-roles/user-role.entity';
+import { UserRolesModule } from './user-roles/user-roles.module';
 
 
 @Module({
@@ -21,7 +23,7 @@ import { UsersModule } from './team B/users/users.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'root',
+      password: '123456',
       database: 'CURD',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ensure entities are loaded
       autoLoadEntities: true,
@@ -32,7 +34,8 @@ import { UsersModule } from './team B/users/users.module';
     MailModule,
     VisitorModule,
     AppointmentModule,
-    UsersModule
+    UsersModule,
+    UserRolesModule
   ],
   
   controllers: [AppController],
