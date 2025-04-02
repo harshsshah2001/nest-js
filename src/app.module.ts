@@ -11,6 +11,8 @@ import { AppointmentModule } from './team B/appointment/appointment.module';
 import { MailService } from './team B/mail/mail.service';
 import { MailModule } from './login+register/mail/mail.module';
 import { UsersModule } from './team B/users/users.module';
+import { UserRole } from './user-roles/user-role.entity';
+import { UserRolesModule } from './user-roles/user-roles.module';
 
 
 @Module({
@@ -33,6 +35,7 @@ import { UsersModule } from './team B/users/users.module';
     VisitorModule,
     AppointmentModule,
     UsersModule,
+    UserRolesModule
   ],
   
   controllers: [AppController],
