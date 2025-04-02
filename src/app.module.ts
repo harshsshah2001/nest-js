@@ -21,7 +21,7 @@ import { UsersModule } from './team B/users/users.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'root',
+      password: 'endel@123',
       database: 'CURD',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ensure entities are loaded
       autoLoadEntities: true,
