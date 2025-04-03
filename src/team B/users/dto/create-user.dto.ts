@@ -16,7 +16,6 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()  // Changed to optional for update operations
-  @MinLength(6)
   password?: string;
 
   @IsString()
