@@ -69,7 +69,7 @@ export class AppointmentService {
         savedAppointment = await this.appointmentRepo.save(appointment);
 
         if (savedAppointment.visitorEmail && savedAppointment.date && savedAppointment.allocatedTime) {
-          const formLink = `http://127.0.0.1:3000/apps-mailbox.html?email=${encodeURIComponent(savedAppointment.visitorEmail)}&time=${encodeURIComponent(savedAppointment.allocatedTime)}&date=${encodeURIComponent(savedAppointment.date)}&firstName=${encodeURIComponent(savedAppointment.firstName || '')}&lastName=${encodeURIComponent(savedAppointment.lastName || '')}`;
+          const formLink = `http://192.168.3.74:8000/apps-mailbox.html?email=${encodeURIComponent(savedAppointment.visitorEmail)}&time=${encodeURIComponent(savedAppointment.allocatedTime)}&date=${encodeURIComponent(savedAppointment.date)}&firstName=${encodeURIComponent(savedAppointment.firstName || '')}&lastName=${encodeURIComponent(savedAppointment.lastName || '')}`;
           await this.mailService.sendAppointmentEmail(
             savedAppointment.visitorEmail,
             savedAppointment.date,

@@ -37,4 +37,10 @@ export class UserRolesController {
   getAllPermissions() {
     return this.userRolesService.getAllPermissions();
   }
+
+  // src/user-roles/user-roles.controller.ts
+@Get('active')
+findAllActive() {
+  return this.userRolesService.findAllActive();
+}
 }

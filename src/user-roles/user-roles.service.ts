@@ -76,15 +76,28 @@ export class UserRolesService {
     }
 }
 
-  async findAll() {
-    try {
-      return await this.userRoleRepository.find({
-        relations: ['permissions', 'permissions.permission'],
-      });
-    } catch (error) {
-      throw new BadRequestException(`Failed to fetch user roles: ${error.message}`);
-    }
+  // src/user-roles/user-roles.service.ts
+async findAllActive() {
+  try {
+    return await this.userRoleRepository.find({
+      where: { active: true }, // Only fetch active roles
+      relations: ['permissions', 'permissions.permission'],
+    });
+  } catch (error) {
+    throw new BadRequestException(`Failed to fetch active user roles: ${error.message}`);
   }
+}
+
+// Keep the original findAll for other use cases
+async findAll() {
+  try {
+    return await this.userRoleRepository.find({
+      relations: ['permissions', 'permissions.permission'],
+    });
+  } catch (error) {
+    throw new BadRequestException(`Failed to fetch user roles: ${error.message}`);
+  }
+}
 
   async findOne(id: number) {
     try {

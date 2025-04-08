@@ -1,4 +1,3 @@
-// main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -6,15 +5,19 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Configure CORS to allow requests from frontend
+  // ✅ Configure CORS to allow requests from specific frontends
   app.enableCors({
-    origin: ["http://192.168.3.74:3001", "http://127.0.0.1:3000"], // Allow both frontend URLs
-    methods: "GET,POST,PUT,PATCH,DELETE", // Added PATCH explicitly
-    allowedHeaders: "Content-Type,Authorization", // Allowed headers
-    credentials: true, // Allow credentials if needed (e.g., for auth)
+    origin: [
+      'http://192.168.3.74:8000', // ✅ Correct frontend IP without trailing slash
+      'http://127.0.0.1:3000',    // Localhost frontend
+      'http://192.168.3.74:3000',    // Optional: localhost without IP
+    ],
+    methods: 'GET,POST,PUT,PATCH,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials: true, // ✅ Required for cookie/session-based auth
   });
 
-  // Enable global validation pipe for DTO validation
+  // ✅ Apply global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -23,7 +26,7 @@ async function bootstrap() {
     }),
   );
 
-  // Listen on port 3001, accessible from all network interfaces
+  // ✅ Listen on all network interfaces so it's accessible by IP
   await app.listen(3001, '0.0.0.0');
 }
 
